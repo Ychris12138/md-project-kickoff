@@ -46,8 +46,8 @@ source of truth         push target           server-side run directory
 | Local project root | `<local_project_root>` | confirmed/unclear |
 | Local branch | `<main or project branch>` | confirmed/unclear |
 | Remote SSH alias | `<ssh alias, e.g. server>` | confirmed/unclear |
-| Remote bare repo | `<remote path, e.g. /public/home/user/git/project.git>` | planned/ready/unclear |
-| Remote runtime checkout | `<remote path, e.g. /public/home/user/project/code>` | planned/ready/unclear |
+| Remote bare repo | `<remote_home>/git/<project>.git` | planned/ready/unclear |
+| Remote runtime checkout | `<remote_home>/<project>/code` | planned/ready/unclear |
 | Remote data root | `<remote path to raw data>` | confirmed/unclear |
 | Remote results root | `<remote path for generated outputs>` | confirmed/unclear |
 

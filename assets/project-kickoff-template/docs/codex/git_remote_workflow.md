@@ -18,10 +18,10 @@ Local working repo
   -> where Codex edits, commits, and maintains project docs/code
 
 Remote bare repo
-  -> push target on the server, e.g. /public/home/<user>/git/<project>.git
+  -> push target on the server, e.g. <remote_home>/git/<project>.git
 
 Remote runtime checkout
-  -> non-bare working directory used to run jobs, e.g. /public/home/<user>/<project>/code
+  -> non-bare working directory used to run jobs, e.g. <remote_home>/<project>/code
 ```
 
 Why not push directly into the runtime checkout?
@@ -87,23 +87,23 @@ Adjust the `git add` paths to match the actual project.
 On the remote server:
 
 ```bash
-mkdir -p /public/home/<user>/git
-git init --bare /public/home/<user>/git/<project>.git
-mkdir -p /public/home/<user>/<project>
-git clone /public/home/<user>/git/<project>.git /public/home/<user>/<project>/code
+mkdir -p <remote_home>/git
+git init --bare <remote_home>/git/<project>.git
+mkdir -p <remote_home>/<project>
+git clone <remote_home>/git/<project>.git <remote_home>/<project>/code
 ```
 
 On local:
 
 ```bash
-git remote add runtime ssh://<remote_alias>/public/home/<user>/git/<project>.git
+git remote add runtime ssh://<remote_alias>/<absolute_remote_repo_path>
 git push -u runtime main
 ```
 
 On remote, update the runtime checkout:
 
 ```bash
-ssh <remote_alias> "cd /public/home/<user>/<project>/code && git pull --ff-only origin main"
+ssh <remote_alias> "cd <remote_home>/<project>/code && git pull --ff-only origin main"
 ```
 
 ## 5. Normal Update Flow
