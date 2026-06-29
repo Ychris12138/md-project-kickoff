@@ -1,0 +1,42 @@
+# Python/cache
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Environments
+.venv/
+venv/
+env/
+conda/
+
+# Temporary/runtime outputs
+tmp/
+temp/
+logs/
+results/
+results_remote/
+results_synced/
+review/
+*.log
+slurm-*.out
+
+# Large MD / scientific data
+*.dcd
+*.xtc
+*.trr
+*.tpr
+*.gro
+*.pdb
+*.nc
+*.h5
+*.hdf5
+*.lammpstrj
+*.dump
+
+# OS/editor
+.DS_Store
+Thumbs.db
+desktop.ini
+

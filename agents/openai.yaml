@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Kickoff"
+  short_description: "Initialize Git-first research projects with Codex workflows."
+  default_prompt: "Use $project-kickoff to initialize this new research project with Git, remote runtime, literature, and sbatch workflows."
