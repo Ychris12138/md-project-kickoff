@@ -1,4 +1,4 @@
-﻿# Codex Project Kickoff Template
+﻿# Codex MD Project Kickoff Template
 
 这个模板包用于在新科研/分析项目的第一条 Codex 线程中建立“项目操作系统”。
 
@@ -19,7 +19,7 @@
 
 ```text
 这是一个新项目，路径是 <project_path>。
-请使用 `$project-kickoff` skill 中自带的模板和初始化脚本。
+请使用 `$md-project-kickoff` skill 中自带的模板和初始化脚本。
 用 Git-first + grill-me / 追问澄清 的方式，先帮我建立项目启动结构。
 不要直接写分析代码。
 

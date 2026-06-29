@@ -8,7 +8,7 @@ Copy this into the first Codex thread for a new project.
 Project name: <project_name>
 Project path: <project_path>
 
-请使用 `$project-kickoff` skill。
+请使用 `$md-project-kickoff` skill。
 
 请用 Git-first + grill-me / 追问澄清 的方式初始化项目。
 不要直接写分析代码。

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Initialize a project-kickoff scaffold in a target project."""
+"""Initialize a md-project-kickoff scaffold in a target project."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from pathlib import Path
 
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
-TEMPLATE_ROOT = SKILL_ROOT / "assets" / "project-kickoff-template"
+TEMPLATE_ROOT = SKILL_ROOT / "assets" / "md-project-kickoff-template"
 
 COPY_FILES = {
     "PROJECT_INDEX.template.md": "PROJECT_INDEX.md",

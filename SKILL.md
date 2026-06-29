@@ -1,9 +1,9 @@
 ---
-name: project-kickoff
+name: md-project-kickoff
 description: Use when starting a new research/code analysis project, initializing PROJECT_INDEX.md or AGENTS.md, setting up Git-first local/remote workflows, planning remote sbatch runs, or grounding a project in literature before implementation.
 ---
 
-# Project Kickoff
+# MD Project Kickoff
 
 Use this skill to initialize or repair a project operating system for Codex-driven research work.
 
@@ -96,7 +96,7 @@ Do not download raw trajectories or large intermediates without explicit approva
 
 ## Bundled Resources
 
-- `assets/project-kickoff-template/`: source templates and prompts.
+- `assets/md-project-kickoff-template/`: source templates and prompts.
 - `scripts/init_project_kickoff.py`: copies scaffold files into a project.
 
 Important template files inside the asset:
@@ -121,4 +121,3 @@ Important template files inside the asset:
 | Submitting sbatch before user reviews paths/math | Prepare review package first. |
 | Downloading whole result folders | Use `outputs_manifest.json`; download only key lightweight outputs. |
 | Writing literature review as background only | Extract methods, definitions, thresholds, checks, and risks. |
-

@@ -1,4 +1,4 @@
-﻿# Project Kickoff Skill
+﻿# MD Project Kickoff Skill
 
 用于快速初始化 Codex 驱动的科研与代码分析项目。
 
@@ -12,26 +12,40 @@
 
 ## 安装
 
-将本仓库放入 Codex 的个人 skills 目录：
+本仓库是私有仓库，安装前需要先登录有权限的 GitHub 账号。推荐使用 GitHub CLI：
 
-```text
-~/.codex/skills/project-kickoff
+```powershell
+gh auth login
+gh repo clone Ychris12138/md-project-kickoff "$env:USERPROFILE\.codex\skills\md-project-kickoff"
 ```
 
-Windows 示例：
+也可以使用已经配置好 GitHub 凭据的 Git：
 
-```text
-C:\Users\<username>\.codex\skills\project-kickoff
+```powershell
+git clone https://github.com/Ychris12138/md-project-kickoff.git "$env:USERPROFILE\.codex\skills\md-project-kickoff"
 ```
 
-重新打开一个 Codex 线程后即可调用。
+macOS 或 Linux：
+
+```bash
+gh auth login
+gh repo clone Ychris12138/md-project-kickoff ~/.codex/skills/md-project-kickoff
+```
+
+更新已安装的 skill：
+
+```powershell
+git -C "$env:USERPROFILE\.codex\skills\md-project-kickoff" pull --ff-only
+```
+
+安装完成后重新打开一个 Codex 线程，输入 `$md-project-kickoff` 即可调用。
 
 ## 使用
 
 在新项目第一条线程中输入：
 
 ```text
-使用 $project-kickoff 初始化这个新项目。
+使用 $md-project-kickoff 初始化这个新项目。
 本地项目路径是 <project_root>。
 请先建立 Git、PROJECT_INDEX、AGENTS、definitions、method registry、literature 和远程 sbatch 工作流，不要直接写分析代码。
 ```
@@ -54,11 +68,10 @@ python <skill_dir>/scripts/init_project_kickoff.py --target <project_root>
 ## 结构
 
 ```text
-project-kickoff/
+md-project-kickoff/
   SKILL.md
   README.md
   agents/openai.yaml
   scripts/init_project_kickoff.py
-  assets/project-kickoff-template/
+  assets/md-project-kickoff-template/
 ```
-
