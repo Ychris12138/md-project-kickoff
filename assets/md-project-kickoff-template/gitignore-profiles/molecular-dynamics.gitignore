@@ -1,0 +1,12 @@
+# Optional molecular-dynamics data profile
+*.dcd
+*.xtc
+*.trr
+*.tpr
+*.gro
+*.pdb
+*.nc
+*.h5
+*.hdf5
+*.lammpstrj
+*.dump

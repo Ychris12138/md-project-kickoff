@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "analysis_id": "<analysis_id>",
+  "status": "planned",
+  "generated_at": "<ISO-8601 timestamp>",
+  "command": "<entry point or exact command>",
+  "outputs": [
+    {
+      "path": "<relative output path>",
+      "role": "<table|figure|report|log|data|other>",
+      "description": "<why this output matters>",
+      "sync": true
+    }
+  ],
+  "checks": [
+    {
+      "name": "<validation check>",
+      "status": "pending",
+      "details": ""
+    }
+  ]
+}

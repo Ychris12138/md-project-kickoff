@@ -1,0 +1,33 @@
+# Python/cache
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Environments
+.venv/
+venv/
+env/
+conda/
+
+# Temporary/runtime outputs
+.project-kickoff-backup/
+tmp/
+temp/
+logs/
+results/
+results_remote/
+results_synced/
+review/
+*.log
+slurm-*.out
+
+# Large project data should be added here after confirming the domain-specific formats.
+# Optional snippets are available under gitignore-profiles/.
+
+# OS/editor
+.DS_Store
+Thumbs.db
+desktop.ini
+

@@ -1,0 +1,4 @@
+interface:
+  display_name: "MD Project Kickoff"
+  short_description: "Lightweight kickoff for research projects with a minimal Git-first scaffold."
+  default_prompt: "Use $md-project-kickoff to initialize this new research project with a lightweight Git-first scaffold. Start minimal, ask only the highest-risk questions, and expand into literature or remote execution only if needed."
