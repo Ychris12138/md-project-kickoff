@@ -36,6 +36,8 @@ FULL_COPY_FILES = {
 
 MINIMAL_CREATE_DIRS = [
     "docs/codex",
+    "outputs/test",
+    "outputs/final",
     "scripts",
     "src",
     "tests",
@@ -55,6 +57,16 @@ FULL_CREATE_DIRS = [
 FULL_PLACEHOLDERS = {
     "docs/literature/literature_review.md": "# Literature Review\n\nStatus: placeholder. Add seed references before method design.\n",
     "docs/literature/method_implications.md": "# Method Implications\n\n| Method idea | Literature basis | Inputs needed | Outputs | Risks | Project action |\n|---|---|---|---|---|---|\n",
+}
+
+LITERATURE_LIBRARY_DIRS = [
+    "literature_library/pdfs",
+    "literature_library/notes",
+    "docs/literature",
+]
+
+LITERATURE_LIBRARY_PLACEHOLDERS = {
+    "docs/literature/literature_knowledge_base.md": "# Literature Knowledge Base\n\nStatus: empty. Add PDFs to `literature_library/pdfs/`, then ask Codex to extract method-relevant notes here.\n\n## Index\n\n| Topic | Source | Key method detail | Project implication |\n|---|---|---|---|\n",
 }
 
 
@@ -121,6 +133,11 @@ def main() -> int:
         help="Back up, then overwrite existing scaffold files.",
     )
     parser.add_argument("--dry-run", action="store_true", help="Print planned changes without writing.")
+    parser.add_argument(
+        "--with-literature-library",
+        action="store_true",
+        help="Create a non-Git literature_library/ folder for PDFs and a small literature knowledge-base starter.",
+    )
     args = parser.parse_args()
 
     target = Path(args.target).expanduser().resolve()
@@ -135,6 +152,9 @@ def main() -> int:
         copy_files.update(FULL_COPY_FILES)
         create_dirs.extend(FULL_CREATE_DIRS)
         placeholders.update(FULL_PLACEHOLDERS)
+    if args.with_literature_library:
+        create_dirs.extend(LITERATURE_LIBRARY_DIRS)
+        placeholders.update(LITERATURE_LIBRARY_PLACEHOLDERS)
 
     if not args.dry_run:
         target.mkdir(parents=True, exist_ok=True)

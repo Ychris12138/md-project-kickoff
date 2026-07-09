@@ -16,12 +16,17 @@ conda/
 tmp/
 temp/
 logs/
+outputs/
 results/
 results_remote/
 results_synced/
 review/
 *.log
 slurm-*.out
+
+# Local literature library
+literature_library/
+*.pdf
 
 # Large project data should be added here after confirming the domain-specific formats.
 # Optional snippets are available under gitignore-profiles/.

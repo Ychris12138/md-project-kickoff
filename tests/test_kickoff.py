@@ -32,6 +32,7 @@ class SkillMetadataTests(unittest.TestCase):
     def test_root_readme_has_portable_public_installation(self) -> None:
         text = (ROOT / "README.md").read_text(encoding="utf-8-sig")
         self.assertIn("gh repo clone <github-owner>/md-project-kickoff", text)
+        self.assertIn("npx github:<github-owner>/md-project-kickoff --target <project_root>", text)
         self.assertIn("pull --ff-only", text)
         self.assertNotIn("private repository", text.lower())
 
@@ -100,6 +101,8 @@ class InitializerTests(unittest.TestCase):
             self.assertTrue((target / ".git").is_dir())
             self.assertTrue((target / "README.md").is_file())
             self.assertTrue((target / "docs/codex/outputs_manifest.template.json").is_file())
+            self.assertTrue((target / "outputs/test").is_dir())
+            self.assertTrue((target / "outputs/final").is_dir())
             self.assertFalse((target / "docs/literature").exists())
             self.assertFalse((target / "docs/codex/remote_sbatch_task_protocol.md").exists())
             self.assertFalse((target / "docs/codex/git_remote_workflow.md").exists())
@@ -117,6 +120,25 @@ class InitializerTests(unittest.TestCase):
             self.assertTrue((target / "docs/literature/literature_review.md").is_file())
             self.assertTrue((target / "docs/codex/git_remote_workflow.md").is_file())
             self.assertTrue((target / "docs/codex/remote_sbatch_task_protocol.md").is_file())
+
+    def test_literature_library_option_creates_non_git_pdf_store_and_knowledge_base(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            target = Path(temp) / "project"
+            run_initializer(target, "--with-literature-library")
+
+            self.assertTrue((target / "literature_library/pdfs").is_dir())
+            self.assertTrue((target / "literature_library/notes").is_dir())
+            self.assertTrue((target / "docs/literature/literature_knowledge_base.md").is_file())
+            gitignore = (target / ".gitignore").read_text(encoding="utf-8-sig")
+            self.assertIn("literature_library/", gitignore)
+            self.assertIn("outputs/", gitignore)
+
+    def test_npx_package_exposes_initializer_bin(self) -> None:
+        package = json.loads((ROOT / "package.json").read_text(encoding="utf-8-sig"))
+
+        self.assertEqual(package["name"], "md-project-kickoff")
+        self.assertEqual(package["bin"]["md-project-kickoff"], "bin/md-project-kickoff.js")
+        self.assertTrue((ROOT / "bin/md-project-kickoff.js").is_file())
 
     def test_force_backs_up_existing_project_memory(self) -> None:
         with tempfile.TemporaryDirectory() as temp:

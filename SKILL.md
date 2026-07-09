@@ -24,6 +24,13 @@ python <skill_dir>/scripts/init_project_kickoff.py --target <project_root>
 ```
 
 Use `--profile full` only when the project clearly needs literature grounding or remote-run scaffolding.
+Use `--with-literature-library` when the user wants a non-Git folder for PDFs and a small searchable literature knowledge base.
+
+For a command-line install/run style, this repository also exposes an `npx` entry:
+
+```bash
+npx github:<github-owner>/md-project-kickoff --target <project_root>
+```
 
 Then inspect and fill only the minimal files:
 
@@ -34,6 +41,8 @@ Then inspect and fill only the minimal files:
 - `docs/method_registry.md`
 - `docs/codex/analysis_contract_template.md`
 - `docs/codex/outputs_manifest.template.json`
+- `outputs/test/`
+- `outputs/final/`
 
 Do not start analysis code in the same step unless the user explicitly asks.
 
@@ -54,6 +63,7 @@ High-risk questions usually involve:
 - local project root
 - whether remote execution is needed
 - raw data paths and read-only constraints
+- whether to create a non-Git literature library for PDFs
 - first scientific question
 - systems/run labels
 - first minimal analysis
@@ -63,6 +73,8 @@ High-risk questions usually involve:
 Only if the method depends on papers, use the literature workflow.
 
 If references are missing, ask for 3-5 seed references or ask permission to search.
+
+If the user wants to collect PDFs over time, create `literature_library/pdfs/` with `--with-literature-library`, keep it out of Git, and distill reusable notes into `docs/literature/literature_knowledge_base.md`.
 
 ### 3. Optional Analysis Implementation
 
@@ -105,4 +117,5 @@ Important template files inside the asset:
 | Guessing remote paths | Mark unknown fields and ask. |
 | Submitting sbatch before user reviews paths/math | Prepare review package first. |
 | Downloading whole result folders | Use `outputs_manifest.json`; download only key lightweight outputs. |
+| Mixing trial outputs and final deliverables | Put checks in `outputs/test/` and reviewed deliverables in `outputs/final/`. |
 | Writing literature review as background only | Extract methods, definitions, thresholds, checks, and risks. |

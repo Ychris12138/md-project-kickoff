@@ -38,6 +38,12 @@ macOS 或 Linux：
 gh repo clone <github-owner>/md-project-kickoff ~/.codex/skills/md-project-kickoff
 ```
 
+也可以用 `npx` 直接从 GitHub 运行初始化器：
+
+```bash
+npx github:<github-owner>/md-project-kickoff --target <project_root>
+```
+
 更新已有安装：
 
 ```powershell
@@ -52,6 +58,12 @@ git -C "$env:USERPROFILE\.codex\skills\md-project-kickoff" pull --ff-only
 
 ```bash
 python <skill_dir>/scripts/init_project_kickoff.py --target <project_root>
+```
+
+建立不加入 Git 的本地文献库，用于存放 PDF 并沉淀小知识库：
+
+```bash
+python <skill_dir>/scripts/init_project_kickoff.py --target <project_root> --with-literature-library
 ```
 
 需要文献和远程运行结构时：
@@ -87,6 +99,12 @@ On macOS or Linux:
 gh repo clone <github-owner>/md-project-kickoff ~/.codex/skills/md-project-kickoff
 ```
 
+You can also run the initializer directly from GitHub with `npx`:
+
+```bash
+npx github:<github-owner>/md-project-kickoff --target <project_root>
+```
+
 Update an existing installation:
 
 ```powershell
@@ -101,6 +119,12 @@ Minimal initialization:
 
 ```bash
 python <skill_dir>/scripts/init_project_kickoff.py --target <project_root>
+```
+
+Create a non-Git local literature library for PDFs and a small knowledge-base starter:
+
+```bash
+python <skill_dir>/scripts/init_project_kickoff.py --target <project_root> --with-literature-library
 ```
 
 Add literature and remote-run scaffolding:

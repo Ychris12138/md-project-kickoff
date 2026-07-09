@@ -24,6 +24,7 @@ Default rules:
 - Do not move, delete, overwrite, or download raw data without explicit approval.
 - Treat local Git as the canonical project state unless the user says otherwise.
 - Treat the remote path as a runtime checkout/container used for running jobs and inspecting logs.
+- Use `outputs/test/` for trial outputs and `outputs/final/` for reviewed deliverables unless a task-specific contract says otherwise.
 - If a definition is missing or unclear, ask the user instead of inventing it.
 - Prefer small design steps before implementation.
 - Update this file when canonical files, active workstreams, or next actions change.
@@ -138,6 +139,8 @@ Default literature outputs, when needed:
 - `docs/literature/reference_manifest.csv`
 - `docs/literature/literature_review.md`
 - `docs/literature/method_implications.md`
+- optional local PDF library: `literature_library/pdfs/` (not tracked by Git)
+- optional searchable notes: `docs/literature/literature_knowledge_base.md`
 - optional: `docs/literature/references.bib`
 
 ## 8. Files And Folders To Avoid By Default
@@ -145,6 +148,9 @@ Default literature outputs, when needed:
 | Path/pattern | Reason |
 |---|---|
 | `<raw_data_path>` | raw data, do not move/delete/copy |
+| `literature_library/` | local PDF/source library, not tracked by Git |
+| `outputs/test/` | trial generated outputs |
+| `outputs/final/` | final generated deliverables |
 | `results/` | may contain large or generated outputs |
 | `tmp/` | temporary outputs |
 | `.venv/`, `__pycache__/`, `.pytest_cache/` | tool/cache folders |

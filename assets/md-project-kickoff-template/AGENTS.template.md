@@ -12,6 +12,7 @@ This file defines how Codex should work inside this project.
 6. Do not move, delete, overwrite, or download raw data unless explicitly approved.
 7. Prefer existing project conventions over inventing new layouts.
 8. If a definition is unclear, ask the user instead of guessing.
+9. Keep trial outputs and final deliverables separate: use `outputs/test/` for checks and `outputs/final/` for reviewed deliverables unless `PROJECT_INDEX.md` defines a stricter path.
 
 ## Git And Remote Runtime
 
@@ -64,6 +65,8 @@ Always preserve these two constraints:
 Use this only when the method depends on papers.
 
 If references are missing, ask for 3-5 seed papers or suggest the type of papers needed. Do not fabricate references.
+
+If the project uses a local literature library, keep source PDFs in `literature_library/pdfs/`. This folder is intentionally not tracked by Git. Extract reusable notes into `docs/literature/literature_knowledge_base.md` and method consequences into `docs/literature/method_implications.md`.
 
 Default literature workflow:
 
@@ -125,7 +128,8 @@ Required contract fields:
 Every formal analysis should produce:
 
 - documented command or script entry point
-- tables/figures under a clear output directory
+- trial tables/figures under `outputs/test/` during checking
+- reviewed final tables/figures under `outputs/final/`
 - a compact `outputs_manifest.json` based on `docs/codex/outputs_manifest.template.json`
 - remote run command and log path, when applicable
 - sbatch script and resource estimate, when applicable
