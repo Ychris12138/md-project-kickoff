@@ -1,19 +1,30 @@
 ---
 name: md-project-kickoff
-description: "Use when starting a new research or code-analysis project that needs a lightweight Git-first kickoff, a minimal PROJECT_INDEX and AGENTS scaffold, a few high-risk clarification questions, or optional expansion into literature review and remote sbatch execution."
+description: "Use when starting or restructuring a research or code-analysis project that needs a lightweight Git-first kickoff, persistent project memory, high-risk clarification questions, literature grounding, or a local-to-SSH Slurm workflow."
 ---
 
 # MD Project Kickoff
 
-Use this skill to start a project without overbuilding the setup.
+Use this Agent Skills-compatible workflow to start a project without overbuilding
+the setup. The project files are the shared source of truth; the host Agent only
+changes how this workflow is discovered and invoked.
 
 ## Default model
 
 ```text
 local Git repo = source of truth
-PROJECT_INDEX.md + AGENTS.md = project memory and rules
+PROJECT_INDEX.md + AGENTS.md = project memory and shared rules
 analysis contract = boundary before implementation
 ```
+
+Host entry points:
+
+- Codex: `$md-project-kickoff`
+- Claude Code: `/md-project-kickoff`
+- Cursor: `/md-project-kickoff` or the direct initializer command
+
+`agents/openai.yaml` is optional Codex UI metadata. It is not required by the
+shared workflow.
 
 ## Quick Start
 
@@ -25,8 +36,9 @@ python <skill_dir>/scripts/init_project_kickoff.py --target <project_root>
 
 Use `--profile full` only when the project clearly needs literature grounding or remote-run scaffolding.
 Use `--with-literature-library` when the user wants a non-Git folder for PDFs and a small searchable literature knowledge base.
+Use `--agent claude`, `--agent cursor`, or `--agent all` when the project should also receive host-specific instruction entry points.
 
-For a command-line install/run style, this repository also exposes an `npx` entry:
+For a host-independent command-line install/run style, this repository also exposes an `npx` entry:
 
 ```bash
 npx github:<github-owner>/md-project-kickoff --target <project_root>
@@ -39,7 +51,7 @@ Then inspect and fill only the minimal files:
 - `README.md`
 - `docs/definitions.md`
 - `docs/method_registry.md`
-- `docs/codex/analysis_contract_template.md`
+- `docs/codex/analysis_contract_template.md` (legacy-compatible workflow path)
 - `docs/codex/outputs_manifest.template.json`
 - `outputs/test/`
 - `outputs/final/`
@@ -57,6 +69,7 @@ Do not start analysis code in the same step unless the user explicitly asks.
 5. Record only the fields you already know in `PROJECT_INDEX.md`.
 6. Mark unknown fields as `unclear`; do not invent paths.
 7. Ask 3-5 high-risk questions.
+8. If the project has a local-plus-SSH workflow, record both endpoints and the sync policy before submitting any batch job.
 
 High-risk questions usually involve:
 
@@ -90,6 +103,24 @@ Before implementation:
 Use this section only when remote execution is part of the task. Enable the full profile, then read and follow `docs/codex/remote_sbatch_task_protocol.md` as the canonical procedure.
 
 Preserve its approval gate before commit/submission and its restriction against downloading raw data or large intermediates without explicit approval.
+
+The following are non-negotiable for every new Slurm workflow:
+
+- `.out` states the task, system/run, selected inputs, parameters, output root, start time, end time, and exit status.
+- `.err` carries unbuffered, promptly flushed `tqdm`-style frame progress, warnings, and diagnostics.
+- Array tasks have distinct logs and record task ID, system/run, and output directory.
+- Aggregation tasks record dependency jobs, input result root, and output files.
+- A smoke test runs before a large submission and verifies useful information in both `.out` and `.err`.
+
+For the complete procedure, read `docs/codex/remote_sbatch_task_protocol.md`.
+
+Remote boundary:
+
+- Edit, test, commit, and push from the local checkout only.
+- Use the SSH server for code update, execution, and large-result storage.
+- Compare local/server commit IDs, branches, and tracked file state before running.
+- Copy back only selected small summaries, figures, and manifests.
+- Never silently delete or overwrite files; propose cleanup and wait for approval.
 
 ## Bundled Resources
 

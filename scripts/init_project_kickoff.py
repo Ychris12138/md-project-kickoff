@@ -59,6 +59,20 @@ FULL_PLACEHOLDERS = {
     "docs/literature/method_implications.md": "# Method Implications\n\n| Method idea | Literature basis | Inputs needed | Outputs | Risks | Project action |\n|---|---|---|---|---|---|\n",
 }
 
+AGENT_COPY_FILES = {
+    "claude": {
+        "adapters/claude/CLAUDE.template.md": "CLAUDE.md",
+    },
+    "cursor": {
+        "adapters/cursor/project-kickoff.mdc": ".cursor/rules/project-kickoff.mdc",
+    },
+}
+
+AGENT_CREATE_DIRS = {
+    "claude": [],
+    "cursor": [".cursor/rules"],
+}
+
 LITERATURE_LIBRARY_DIRS = [
     "literature_library/pdfs",
     "literature_library/notes",
@@ -66,7 +80,7 @@ LITERATURE_LIBRARY_DIRS = [
 ]
 
 LITERATURE_LIBRARY_PLACEHOLDERS = {
-    "docs/literature/literature_knowledge_base.md": "# Literature Knowledge Base\n\nStatus: empty. Add PDFs to `literature_library/pdfs/`, then ask Codex to extract method-relevant notes here.\n\n## Index\n\n| Topic | Source | Key method detail | Project implication |\n|---|---|---|---|\n",
+    "docs/literature/literature_knowledge_base.md": "# Literature Knowledge Base\n\nStatus: empty. Add PDFs to `literature_library/pdfs/`, then ask the Agent to extract method-relevant notes here.\n\n## Index\n\n| Topic | Source | Key method detail | Project implication |\n|---|---|---|---|\n",
 }
 
 
@@ -138,6 +152,12 @@ def main() -> int:
         action="store_true",
         help="Create a non-Git literature_library/ folder for PDFs and a small literature knowledge-base starter.",
     )
+    parser.add_argument(
+        "--agent",
+        choices=("neutral", "codex", "claude", "cursor", "all"),
+        default="neutral",
+        help="Add host-specific project instructions. Neutral/codex keep the shared AGENTS.md entry point.",
+    )
     args = parser.parse_args()
 
     target = Path(args.target).expanduser().resolve()
@@ -155,6 +175,13 @@ def main() -> int:
     if args.with_literature_library:
         create_dirs.extend(LITERATURE_LIBRARY_DIRS)
         placeholders.update(LITERATURE_LIBRARY_PLACEHOLDERS)
+
+    selected_agents = {args.agent}
+    if args.agent == "all":
+        selected_agents = {"claude", "cursor"}
+    for agent in selected_agents:
+        create_dirs.extend(AGENT_CREATE_DIRS.get(agent, []))
+        copy_files.update(AGENT_COPY_FILES.get(agent, {}))
 
     if not args.dry_run:
         target.mkdir(parents=True, exist_ok=True)

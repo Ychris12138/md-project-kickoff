@@ -60,5 +60,5 @@ This file is allowed to contain unclear or undecided entries. Do not treat blank
 
 ## 9. Unresolved Questions
 
-- `<question Codex should ask before implementation>`
+- `<question the Agent should ask before implementation>`
 

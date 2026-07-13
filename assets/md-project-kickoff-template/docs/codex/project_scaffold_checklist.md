@@ -1,6 +1,6 @@
 # Project Scaffold Checklist
 
-Use this checklist during a new project's first Codex thread. Complete the minimal section first; enable add-ons only when the project needs them.
+Use this checklist during a new project's first Agent task. Complete the minimal section first; enable add-ons only when the project needs them.
 
 ## Minimal Profile
 
@@ -38,3 +38,18 @@ Enable with `--profile full` when execution requires a server:
 - [ ] The analysis contract is clear enough for the current task.
 - [ ] Expected outputs and at least one validation check are named.
 - [ ] Files and folders that must not be touched are recorded.
+
+## Local And Remote Boundary
+
+- [ ] Local project path, SSH path, Git branch, test directory, formal result directory, and sync policy are recorded.
+- [ ] Local/server commit and branch relationship is known before any remote run.
+- [ ] Server-side source edits are prohibited unless the user explicitly authorizes an emergency repair.
+- [ ] Cleanup candidates are reported before deletion or overwrite.
+
+## Slurm Readiness
+
+- [ ] `.out` records task, system/run, parameters, output root, start/end times, and exit status.
+- [ ] `.err` shows unbuffered, promptly flushed frame progress and diagnostics.
+- [ ] Array logs identify task ID, system/run, and output directory.
+- [ ] Aggregation logs identify dependencies, input result root, and output files.
+- [ ] A smoke test verified both `.out` and `.err` before the large submission.

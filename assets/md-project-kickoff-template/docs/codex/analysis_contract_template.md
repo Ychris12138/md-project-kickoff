@@ -2,7 +2,7 @@
 
 Use this before `implement + verify` work.
 
-The user does not need to fill every field manually. Codex should draft this from the request, then ask only the missing high-risk questions.
+The user does not need to fill every field manually. The Agent should draft this from the request, then ask only the missing high-risk questions.
 
 ## 1. Task Header
 
@@ -13,7 +13,7 @@ module: <module/workstream>
 analysis_id: <short stable id>
 date: <YYYY-MM-DD>
 local_branch: <branch>
-commit_scope: <files/folders Codex may edit>
+commit_scope: <files/folders the Agent may edit>
 do_not_touch: <raw data, unrelated modules, old outputs>
 ```
 
@@ -58,8 +58,12 @@ local_repo_is_source_of_truth: true
 remote_ssh_alias: <alias>
 remote_bare_repo: <path or not needed for this task>
 remote_runtime_checkout: <path>
+remote_test_agent_dir: <path>
 remote_data_root: <path>
 remote_results_root: <path>
+local_test_output_dir: outputs/test/<analysis_id>
+local_final_output_dir: outputs/final/<analysis_id>
+sync_policy: <what is pushed, pulled, and copied back>
 remote_run_command: <command or unclear>
 remote_log_path: <path or unclear>
 sbatch_script: <path or not needed>
@@ -101,7 +105,7 @@ If running remotely, also specify:
 Selected results should eventually be downloaded to:
 
 ```text
-<current Codex thread workspace>/outputs/<analysis_id>/
+<local_project_root>/outputs/final/<analysis_id>/
 ```
 
 ## 8. Verification
@@ -109,6 +113,11 @@ Selected results should eventually be downloaded to:
 ```yaml
 local_checks:
   - <command>
+smoke_test:
+  required_before_large_submission: true
+  command: <small representative command>
+  out_log_check: <task/system/run/parameters/start/end/status>
+  err_log_check: <unbuffered live frame progress/warnings/diagnostics>
 review_before_commit:
   required: true
   review_focus:
@@ -131,7 +140,7 @@ Only unresolved high-risk questions:
 
 ## 10. Final Thread Deliverable
 
-Codex should return:
+The Agent should return:
 
 - changed files
 - local Git status and commit recommendation

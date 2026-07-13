@@ -5,7 +5,7 @@ Use this when the project exists locally but Git/remote runtime are not set up y
 ```text
 Mode: design only, then implement only after confirming the plan.
 
-请使用 `$md-project-kickoff` skill，并读取项目内的 `docs/codex/git_remote_workflow.md`。
+请使用 `md-project-kickoff` skill，并读取项目内的 `docs/codex/git_remote_workflow.md`。
 
 目标：
 把这个项目整理成 Git-first 工作流：

@@ -1,7 +1,7 @@
 {
   "name": "md-project-kickoff",
-  "version": "1.0.1",
-  "description": "Git-first Codex project kickoff scaffold for research and code-analysis projects.",
+  "version": "1.1.0",
+  "description": "Agent-neutral Git-first project kickoff scaffold for research and code-analysis projects.",
   "bin": {
     "md-project-kickoff": "bin/md-project-kickoff.js"
   },

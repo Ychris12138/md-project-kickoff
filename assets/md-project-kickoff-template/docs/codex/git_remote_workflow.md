@@ -9,6 +9,10 @@ local repository = source of truth
 remote server path = runtime container
 ```
 
+This boundary is Agent-neutral: the local checkout is the only place where
+source, configuration, tests, documentation, and Slurm scripts are edited.
+The SSH server receives reviewed commits, runs jobs, and stores large results.
+
 For remote batch jobs, use `docs/codex/remote_sbatch_task_protocol.md` as the canonical review, submission, retrieval, and reporting procedure.
 
 ## 1. Recommended Topology
@@ -17,7 +21,7 @@ Use three roles:
 
 ```text
 Local working repo
-  -> where Codex edits, commits, and maintains project docs/code
+  -> where the Agent edits, tests, commits, and maintains project docs/code
 
 Remote bare repo
   -> push target on the server, e.g. <remote_home>/git/<project>.git
@@ -43,6 +47,10 @@ Why not push directly into the runtime checkout?
 | Remote runtime checkout | `<remote_home>/<project>/code` |
 | Remote data root | `<remote_data_root>` |
 | Remote results root | `<remote_results_root>` |
+| Remote test-agent directory | `<remote_test_agent_directory>` |
+| Local test outputs | `outputs/test/` |
+| Local final outputs | `outputs/final/` |
+| Synchronization policy | `<push/pull/copy-back policy>` |
 
 ## 3. First-Time Local Setup
 
@@ -125,6 +133,10 @@ Then run:
 ssh <remote_alias> "cd <remote_runtime_checkout> && <run command>"
 ```
 
+Before the remote run, compare the local and server commit IDs and verify the
+tracked file state. Do not edit source directly on the server. If a server-side
+file appears obsolete, propose a cleanup list and wait for explicit approval.
+
 ## 6. Inspecting Remote State
 
 Use the SSH alias and runtime path recorded in `PROJECT_INDEX.md`:
@@ -174,5 +186,8 @@ results_synced/<analysis_id>/
 - Do not run `rm -rf` on local or remote project paths unless explicitly approved.
 - Do not use `rsync --delete` unless explicitly approved.
 - Do not commit large raw trajectories or generated result directories.
+- Do not silently delete or overwrite scripts, tests, logs, or intermediate results.
+- Keep server tests, temporary scripts, logs, and intermediate outputs under the
+  recorded test-agent directory; do not use shared `/tmp`.
 - Do not push directly into the remote runtime checkout unless the workflow was deliberately configured that way.
 - If local and remote branches diverge, stop and ask before merging/rebasing.

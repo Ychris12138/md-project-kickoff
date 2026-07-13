@@ -8,9 +8,9 @@ Local repo role: source of truth
 
 Remote role: runtime container
 
-## 0. Codex Start Here
+## 0. Agent Start Here
 
-When opening a new Codex thread for this project:
+When opening a new task in any supported Agent:
 
 1. Read this file first.
 2. Read `AGENTS.md`.
@@ -46,8 +46,12 @@ source of truth         push target           server-side run directory
 | Local branch | `<main or project branch>` | confirmed/unclear |
 | Remote SSH alias | `<ssh alias>` | confirmed/unclear |
 | Remote runtime checkout | `<remote_runtime_checkout>` | confirmed/unclear |
+| Remote test-agent directory | `<remote_test_agent_directory>` | confirmed/unclear |
 | Remote data root | `<remote data root>` | confirmed/unclear |
 | Remote results root | `<remote results root>` | confirmed/unclear |
+| Local test outputs | `outputs/test/` | confirmed/unclear |
+| Local final outputs | `outputs/final/` | confirmed/unclear |
+| Synchronization policy | `<what is pushed, pulled, and copied back>` | confirmed/unclear |
 
 Standard sync flow:
 
@@ -106,7 +110,7 @@ Status meanings:
 | File | Role |
 |---|---|
 | `PROJECT_INDEX.md` | Project map and current state |
-| `AGENTS.md` | Codex operating rules |
+| `AGENTS.md` | Shared project-agent operating rules |
 | `docs/definitions.md` | Definitions, labels, thresholds, windows, units |
 | `docs/method_registry.md` | Current best implementation of each method |
 | `docs/codex/analysis_contract_template.md` | Contract template for new analysis work |
@@ -155,7 +159,7 @@ Default literature outputs, when needed:
 | `tmp/` | temporary outputs |
 | `.venv/`, `__pycache__/`, `.pytest_cache/` | tool/cache folders |
 
-## 9. Standard New-Thread Prompt
+## 9. Standard New-Task Prompt
 
 ```text
 This is <project_name>.
@@ -168,6 +172,14 @@ If remote information is needed, use the SSH alias/path recorded in PROJECT_INDE
 If the analysis contract is incomplete, draft it from my request and ask only the missing high-risk questions.
 Do not scan large raw data/result/cache folders unless needed.
 ```
+
+For remote Slurm work, also confirm before submission:
+
+- local and server commit IDs match;
+- the review package was approved;
+- the smoke test verified useful `.out` and `.err` content;
+- test outputs and final outputs have separate directories;
+- stale files have been proposed for cleanup rather than silently deleted.
 
 ## 10. Maintenance Checklist
 

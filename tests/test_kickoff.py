@@ -91,6 +91,34 @@ class SkillMetadataTests(unittest.TestCase):
         self.assertIn("remote_sbatch_task_protocol.md", git_remote)
         self.assertNotIn("*.dcd", git_remote)
 
+    def test_shared_templates_are_agent_neutral_and_capture_runtime_guardrails(self) -> None:
+        agents = (
+            ROOT / "assets/md-project-kickoff-template/AGENTS.template.md"
+        ).read_text(encoding="utf-8-sig")
+        index = (
+            ROOT / "assets/md-project-kickoff-template/PROJECT_INDEX.template.md"
+        ).read_text(encoding="utf-8-sig")
+        protocol = (
+            ROOT
+            / "assets/md-project-kickoff-template/docs/codex/remote_sbatch_task_protocol.md"
+        ).read_text(encoding="utf-8-sig")
+
+        self.assertIn("AI coding or research agent", agents)
+        self.assertNotIn("how Codex should work", agents)
+        self.assertIn("Remote test-agent directory", index)
+        self.assertIn("Synchronization policy", index)
+        for required in (
+            "system/run",
+            "start time",
+            "end time",
+            "exit status",
+            "tqdm",
+            "Array tasks",
+            "Aggregation tasks",
+            "smoke test",
+        ):
+            self.assertIn(required, protocol)
+
 
 class InitializerTests(unittest.TestCase):
     def test_minimal_profile_initializes_git_and_stays_minimal(self) -> None:
@@ -132,6 +160,28 @@ class InitializerTests(unittest.TestCase):
             gitignore = (target / ".gitignore").read_text(encoding="utf-8-sig")
             self.assertIn("literature_library/", gitignore)
             self.assertIn("outputs/", gitignore)
+
+    def test_agent_all_adds_claude_and_cursor_project_entry_points(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            target = Path(temp) / "project"
+            run_initializer(target, "--agent", "all")
+
+            claude = (target / "CLAUDE.md").read_text(encoding="utf-8-sig")
+            cursor = (
+                target / ".cursor/rules/project-kickoff.mdc"
+            ).read_text(encoding="utf-8-sig")
+            self.assertIn("@PROJECT_INDEX.md", claude)
+            self.assertIn("@AGENTS.md", claude)
+            self.assertIn("alwaysApply: true", cursor)
+            self.assertIn("AGENTS.md", cursor)
+
+    def test_agent_specific_option_does_not_add_other_host_entry_point(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            target = Path(temp) / "project"
+            run_initializer(target, "--agent", "claude")
+
+            self.assertTrue((target / "CLAUDE.md").is_file())
+            self.assertFalse((target / ".cursor/rules/project-kickoff.mdc").exists())
 
     def test_npx_package_exposes_initializer_bin(self) -> None:
         package = json.loads((ROOT / "package.json").read_text(encoding="utf-8-sig"))

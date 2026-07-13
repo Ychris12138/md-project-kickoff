@@ -4,7 +4,7 @@
 这是一个研究项目，项目路径是：
 <local_project_root>
 
-请使用 `$md-project-kickoff` skill。
+请使用 `md-project-kickoff` skill；根据当前 Agent 使用对应的 skill 调用语法。
 
 Mode: design only。
 

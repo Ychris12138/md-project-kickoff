@@ -1,6 +1,6 @@
 ﻿# First Thread Prompt
 
-Copy this into the first Codex thread for a new project.
+Copy this into the first task for a new project in any supported Agent.
 
 ```text
 这是一个新项目：
@@ -8,7 +8,10 @@ Copy this into the first Codex thread for a new project.
 Project name: <project_name>
 Project path: <project_path>
 
-请使用 `$md-project-kickoff` skill。
+请使用 `md-project-kickoff` skill。
+
+如果当前 Agent 是 Claude Code 或 Cursor，请用 `--agent claude`、`--agent cursor`
+或 `--agent all` 生成相应的项目级入口；通用规则仍以 `AGENTS.md` 为共享来源。
 
 请用 Git-first + grill-me / 追问澄清 的方式先做轻量初始化。
 不要直接写分析代码。

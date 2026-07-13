@@ -7,7 +7,7 @@ Core model:
 ```text
 local repo = edit, test, review, commit, push
 remote runtime checkout = pull latest code, run sbatch, inspect logs/results
-thread outputs folder = selected lightweight results for user-facing delivery
+local project outputs = selected lightweight results for user-facing delivery
 ```
 
 ## Stage 1. Local Implementation And Review Package
@@ -44,6 +44,8 @@ The review package must include:
 | Risks | assumptions, missing definitions, likely failure modes |
 
 Do not commit/push until the user approves the review package, unless explicitly told to proceed without review.
+The Agent must not treat a general request to implement code as approval to run
+the remote job.
 
 After approval:
 
@@ -79,13 +81,28 @@ git pull --ff-only
 git rev-parse --short HEAD
 ```
 
-4. Submit job:
+4. Run a smoke test using the same worker and representative input.
+
+5. Submit the large job only after the smoke test passes:
 
 ```bash
 sbatch <script> <args>
 ```
 
-5. Report:
+Before a large submission, run a smoke test and verify both log channels:
+
+- `.out` includes the task description, system/run, selected frame or window,
+  resolved parameters, output root, start time, end time, and exit status.
+- `.err` shows promptly flushed, unbuffered `tqdm`-style frame progress and is
+  available for warnings, tracebacks, and diagnostics.
+- Array tasks use distinct `.out` and `.err` paths and record task ID, system/run,
+  and output directory.
+- Aggregation tasks record dependency job IDs, input result root, and output
+  summary/figure paths.
+
+Do not submit the large job if either `.out` or `.err` fails this check.
+
+6. Report:
 
 - remote host/alias
 - runtime checkout path
@@ -113,11 +130,11 @@ tail -n 80 <log file>
 
 3. Inspect outputs.
 4. Prefer `outputs_manifest.json` for selecting files.
-5. Download only key lightweight results to the local thread/project `outputs` folder.
+5. Download only key lightweight results to the local project `outputs/final/<analysis_id>/` folder.
 6. Analyze results.
 7. Report:
 
-- files downloaded
+- files downloaded to `outputs/final/<analysis_id>/`
 - main results
 - sanity checks
 - caveats
@@ -146,8 +163,14 @@ Each `sbatch` script should make these clear:
 Default local destination:
 
 ```text
-<current Codex thread workspace>/outputs/<analysis_id>/
+<local_project_root>/outputs/final/<analysis_id>/
 ```
 
 If the user gives a project-specific output path, use that instead.
+
+Trial checks and smoke-test artifacts belong under:
+
+```text
+<local_project_root>/outputs/test/<analysis_id>/
+```
 

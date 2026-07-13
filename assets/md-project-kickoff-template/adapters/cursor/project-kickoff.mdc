@@ -1,0 +1,15 @@
+---
+description: Shared project memory, local-first Git workflow, and safe remote execution rules
+alwaysApply: true
+---
+
+Before changing project files, read `PROJECT_INDEX.md` and `AGENTS.md`.
+
+Treat the local checkout as the only development, editing, testing, commit, and
+push path. Treat the SSH server as the runtime and large-result storage path.
+
+Before any remote commit/push/submission, present the review package and wait for
+explicit user approval. For Slurm work, read the relevant protocol under
+`docs/codex/` and verify the smoke-test `.out` and `.err` requirements.
+
+Do not silently delete, overwrite, or download raw data or large intermediates.

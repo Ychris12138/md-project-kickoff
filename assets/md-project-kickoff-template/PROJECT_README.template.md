@@ -7,7 +7,7 @@
 ## Start Here
 
 - Read PROJECT_INDEX.md for project state, paths, and next actions.
-- Read AGENTS.md for Codex working rules.
+- Read AGENTS.md for shared project-agent working rules.
 - Keep the local Git repository as the source of truth.
 
 ## Current Status

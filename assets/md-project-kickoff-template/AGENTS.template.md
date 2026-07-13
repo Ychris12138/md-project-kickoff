@@ -1,6 +1,6 @@
 # AGENTS.md
 
-This file defines how Codex should work inside this project.
+This file defines how an AI coding or research agent should work inside this project.
 
 ## Core Rules
 
@@ -13,6 +13,18 @@ This file defines how Codex should work inside this project.
 7. Prefer existing project conventions over inventing new layouts.
 8. If a definition is unclear, ask the user instead of guessing.
 9. Keep trial outputs and final deliverables separate: use `outputs/test/` for checks and `outputs/final/` for reviewed deliverables unless `PROJECT_INDEX.md` defines a stricter path.
+
+## Local Development And SSH Boundary
+
+These rules apply whenever the project has a local checkout and an SSH runtime:
+
+1. The local checkout is the only development, editing, testing, and commit path.
+2. The SSH server receives reviewed commits, updates its runtime checkout, runs jobs, and stores large results.
+3. Server-side source changes must follow `local edit -> local test -> local commit -> push -> server update -> run`.
+4. At project start, record the local path, SSH alias/path, Git branch, remote branch relationship, test directory, formal result directory, raw-data roots, and sync policy in `PROJECT_INDEX.md`.
+5. Before a remote run, compare local/server commit IDs, branches, and tracked file state.
+6. Copy back only selected small summaries, figures, manifests, and other explicitly requested review artifacts.
+7. Never silently delete or overwrite files. List stale scripts, tests, logs, or intermediates as cleanup suggestions and wait for approval.
 
 ## Git And Remote Runtime
 
@@ -59,6 +71,22 @@ Always preserve these two constraints:
 
 - Do not submit before the user reviews important input/output paths and the mathematical or statistical method, unless explicitly told to skip review.
 - Do not download raw data or large intermediates without explicit approval.
+
+The remote protocol is an approval gate, not an automatic permission to push or submit.
+
+## Slurm Log And Live Progress Requirements
+
+Every new Slurm workflow must satisfy all of these checks:
+
+1. `.out` states the task content before computation, including analysis name, system/run, task or frame selection, resolved parameters, and output directory.
+2. `.out` records start time, host, job/array identifiers, exact command or resolved parameters, end time, and final exit status.
+3. `.err` carries unbuffered, promptly flushed `tqdm`-style frame progress, warnings, tracebacks, and diagnostics. Python workers use `python -u` or an equivalent unbuffered mode and send progress to stderr.
+4. Array tasks use distinct `.out` and `.err` paths and record task ID, system/run, and output directory.
+5. Aggregation tasks record dependency job IDs, input result root, and output summary/figure files.
+6. Before a new large submission, run a smoke test and confirm that both `.out` and `.err` contain useful runtime information.
+7. Keep server tests, temporary scripts, logs, and intermediate outputs under the recorded remote test-agent directory; never use shared `/tmp`.
+
+Do not submit the large job when the smoke test does not prove both log channels are usable.
 
 ## Optional Literature Workflow
 

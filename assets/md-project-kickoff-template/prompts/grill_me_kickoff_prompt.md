@@ -1,6 +1,6 @@
 ﻿# Grill-Me Kickoff Prompt
 
-Use this when the project is still blurry and you want Codex to ask clarifying questions before structure or code.
+Use this when the project is still blurry and you want the Agent to ask clarifying questions before structure or code.
 
 ```text
 Mode: design only。

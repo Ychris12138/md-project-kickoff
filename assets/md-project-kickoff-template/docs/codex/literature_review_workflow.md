@@ -141,7 +141,7 @@ Update `PROJECT_INDEX.md` with:
 
 ## 7. Quality Rules
 
-- Separate what the paper says from what Codex infers.
+- Separate what the paper says from what the Agent infers.
 - Keep citations attached to method claims.
 - Do not overstate methods from papers that were not read.
 - Prefer tables for definitions, thresholds, methods, and validation checks.
