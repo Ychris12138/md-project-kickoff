@@ -1,5 +1,9 @@
 # MD Project Kickoff
 
+Current release / 当前版本: **v1.0.2**
+
+[Release v1.0.2](https://github.com/Ychris12138/md-project-kickoff/releases/tag/v1.0.2)
+
 ## 适用场景 / Use cases
 
 这个 Agent Skill 适合需要逐步澄清、跨任务延续并保持可复现性的科研或代码分析项目。它以本地 Git 为事实来源，用轻量项目地图和共享工作规则保存上下文，并可按需扩展文献综述、远程运行和 Slurm `sbatch` 工作流。
@@ -7,84 +11,71 @@
 This Agent Skill is for research and code-analysis projects that evolve through gradual clarification, span multiple agent tasks, and need reproducible project state. It keeps local Git as the source of truth, stores context in a lightweight project map and shared working rules, and optionally expands into literature review, remote execution, and Slurm `sbatch` workflows.
 
 - 新科研或代码分析项目 / New research or code-analysis projects
-- 尚未完全确定定义、方法或数据路径的项目 / Projects with evolving definitions, methods, or data paths
-- 需要多个 Agent 任务持续协作的项目 / Projects continued across multiple agent tasks
-- 需要可选文献依据或远程批处理的项目 / Projects that may need literature grounding or remote batch execution
+- 定义、方法或数据路径仍在逐步确定的项目 / Projects with evolving definitions, methods, or data paths
+- 需要跨多个 Agent 任务持续协作的项目 / Projects continued across multiple agent tasks
+- 需要文献依据或远程批处理的项目 / Projects that need literature grounding or remote batch execution
 
 [中文](#中文) | [English](#english)
 
 ## 中文
 
-### 核心能力
+### 一键安装（推荐）
 
-- 默认建立最小 Git-first 项目结构，不要求开局时填完所有信息。
-- 生成 `README.md`、`PROJECT_INDEX.md`、`AGENTS.md`、定义中心、方法注册表和分析合约。
-- 只追问 3-5 个高风险问题，并允许把未知项标记为 `unclear`。
-- 每个正式分析使用轻量 `outputs_manifest.json` 记录产物和验证结果。
-- 仅在需要时启用文献综述、远程 Git 和 `sbatch` 三阶段协议。
-- 默认保护已有文件；使用 `--force` 时先备份到 `.project-kickoff-backup/<timestamp>/`。
-
-### 安装
-
-将 `<github-owner>` 替换为仓库所有者。下面的安装方式适用于 Codex、Claude Code 和 Cursor；技能目录不同，但共享的 `SKILL.md`、脚本和模板相同。
+Windows PowerShell 5.1+：
 
 ```powershell
-gh repo clone <github-owner>/md-project-kickoff "$env:USERPROFILE\.codex\skills\md-project-kickoff"
+irm https://raw.githubusercontent.com/Ychris12138/md-project-kickoff/main/install.ps1 | iex
 ```
 
-Claude Code：
-
-```powershell
-gh repo clone <github-owner>/md-project-kickoff "$env:USERPROFILE\.claude\skills\md-project-kickoff"
-```
-
-Cursor：
-
-```powershell
-gh repo clone <github-owner>/md-project-kickoff "$env:USERPROFILE\.cursor\skills\md-project-kickoff"
-```
-
-macOS 或 Linux：
+macOS、Linux、WSL 或 Git Bash：
 
 ```bash
-gh repo clone <github-owner>/md-project-kickoff ~/.codex/skills/md-project-kickoff
+curl -fsSL https://raw.githubusercontent.com/Ychris12138/md-project-kickoff/main/install.sh | bash
 ```
 
-Claude Code：
+安装器需要 Node.js 18+，会自动检测并安装到当前机器上存在的标准技能目录：
+
+| Agent | 默认目录 |
+|---|---|
+| Codex | `~/.codex/skills/md-project-kickoff/` |
+| Claude Code | `~/.claude/skills/md-project-kickoff/` |
+| Cursor | `~/.cursor/skills/md-project-kickoff/` |
+| Agent Skills 通用目录 | `~/.agents/skills/md-project-kickoff/` |
+
+安装完成后，在 Codex 中调用 `$md-project-kickoff`，在 Claude Code 或 Cursor 中调用 `/md-project-kickoff`。
+
+### 安装器选项
+
+默认只写入检测到的 Agent。需要显式创建所有支持目录时：
 
 ```bash
-gh repo clone <github-owner>/md-project-kickoff ~/.claude/skills/md-project-kickoff
+curl -fsSL https://raw.githubusercontent.com/Ychris12138/md-project-kickoff/main/install.sh | bash -s -- --all
 ```
 
-Cursor：
+其他选项：
 
 ```bash
-gh repo clone <github-owner>/md-project-kickoff ~/.cursor/skills/md-project-kickoff
+node bin/install.js --only codex,claude,cursor --dry-run
+node bin/install.js --uninstall --only cursor
 ```
 
-也可以用 `npx` 直接从 GitHub 运行初始化器：
+安装器可以重复运行，用于更新已安装版本；它只维护 `md-project-kickoff` 自己的技能目录。
 
-```bash
-npx github:<github-owner>/md-project-kickoff --target <project_root>
-```
+### 初始化项目
 
-更新已有安装：
-
-```powershell
-git -C "$env:USERPROFILE\.codex\skills\md-project-kickoff" pull --ff-only
-```
-
-安装后，在 Codex 中调用 `$md-project-kickoff`，在 Claude Code 或 Cursor 中调用 `/md-project-kickoff`。
-
-### 使用
-
-最小初始化：
+安装后，最小初始化：
 
 ```bash
 python <skill_dir>/scripts/init_project_kickoff.py --target <project_root>
 ```
 
-建立不加入 Git 的本地文献库，用于存放 PDF 并沉淀小知识库：
+同时建立 Claude Code 和 Cursor 的项目级入口：
+
+```bash
+python <skill_dir>/scripts/init_project_kickoff.py --target <project_root> --agent all
+```
+
+建立不加入 Git 的本地 PDF 文献库：
 
 ```bash
 python <skill_dir>/scripts/init_project_kickoff.py --target <project_root> --with-literature-library
@@ -96,78 +87,70 @@ python <skill_dir>/scripts/init_project_kickoff.py --target <project_root> --wit
 python <skill_dir>/scripts/init_project_kickoff.py --target <project_root> --profile full
 ```
 
-同时生成 Claude Code 和 Cursor 的项目级入口：
+### 备用方式
+
+直接从 GitHub 运行初始化器：
 
 ```bash
-python <skill_dir>/scripts/init_project_kickoff.py --target <project_root> --agent all
+npx -y github:Ychris12138/md-project-kickoff --target <project_root>
 ```
 
-默认 `.gitignore` 与学科无关。可选领域规则位于 `assets/md-project-kickoff-template/gitignore-profiles/`。
+开发或离线场景可以手动 clone 到对应 Agent 的技能目录。默认 `.gitignore` 与学科无关；分子动力学等领域规则位于 `assets/md-project-kickoff-template/gitignore-profiles/`。
+
+### 核心工作边界
+
+- 本地 checkout 是唯一的开发、测试、编辑、commit 和 push 路径。
+- SSH 服务器只负责接收代码、运行任务和保存大规模结果。
+- Slurm 大任务提交前必须先做 smoke test，并确认 `.out/.err` 都有有效运行信息。
+- `.out` 记录任务、system/run、参数、输出目录、开始/结束时间和退出状态。
+- `.err` 使用无缓冲、实时刷新的 `tqdm` 帧进度。
+- 试验结果放在 `outputs/test/`，审阅后的正式产物放在 `outputs/final/`。
 
 ## English
 
-### Core capabilities
+### One-command install (recommended)
 
-- Creates a minimal Git-first scaffold without requiring every decision up front.
-- Generates `README.md`, `PROJECT_INDEX.md`, `AGENTS.md`, definitions, a method registry, and an analysis contract.
-- Asks only 3-5 high-risk questions and permits unknown values to remain `unclear`.
-- Uses a compact `outputs_manifest.json` for every formal analysis.
-- Adds literature review, remote Git, and the three-stage `sbatch` protocol only when needed.
-- Preserves existing files by default; `--force` first backs them up under `.project-kickoff-backup/<timestamp>/`.
-
-### Install
-
-Replace `<github-owner>` with the repository owner. The same shared Agent Skill can be installed for Codex, Claude Code, or Cursor; only the discovery directory and invocation syntax differ.
+Windows PowerShell 5.1+:
 
 ```powershell
-gh repo clone <github-owner>/md-project-kickoff "$env:USERPROFILE\.codex\skills\md-project-kickoff"
+irm https://raw.githubusercontent.com/Ychris12138/md-project-kickoff/main/install.ps1 | iex
 ```
 
-Claude Code:
-
-```powershell
-gh repo clone <github-owner>/md-project-kickoff "$env:USERPROFILE\.claude\skills\md-project-kickoff"
-```
-
-Cursor:
-
-```powershell
-gh repo clone <github-owner>/md-project-kickoff "$env:USERPROFILE\.cursor\skills\md-project-kickoff"
-```
-
-On macOS or Linux:
+macOS, Linux, WSL, or Git Bash:
 
 ```bash
-gh repo clone <github-owner>/md-project-kickoff ~/.codex/skills/md-project-kickoff
+curl -fsSL https://raw.githubusercontent.com/Ychris12138/md-project-kickoff/main/install.sh | bash
 ```
 
-Claude Code:
+The installer requires Node.js 18+ and detects the standard skill directories that exist on the machine:
 
-```bash
-gh repo clone <github-owner>/md-project-kickoff ~/.claude/skills/md-project-kickoff
-```
-
-Cursor:
-
-```bash
-gh repo clone <github-owner>/md-project-kickoff ~/.cursor/skills/md-project-kickoff
-```
-
-You can also run the initializer directly from GitHub with `npx`:
-
-```bash
-npx github:<github-owner>/md-project-kickoff --target <project_root>
-```
-
-Update an existing installation:
-
-```powershell
-git -C "$env:USERPROFILE\.codex\skills\md-project-kickoff" pull --ff-only
-```
+| Agent | Default directory |
+|---|---|
+| Codex | `~/.codex/skills/md-project-kickoff/` |
+| Claude Code | `~/.claude/skills/md-project-kickoff/` |
+| Cursor | `~/.cursor/skills/md-project-kickoff/` |
+| Agent Skills standard | `~/.agents/skills/md-project-kickoff/` |
 
 After installation, invoke `$md-project-kickoff` in Codex, or `/md-project-kickoff` in Claude Code and Cursor.
 
-### Usage
+### Installer options
+
+The default installs only for detected Agents. To explicitly create every supported target:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Ychris12138/md-project-kickoff/main/install.sh | bash -s -- --all
+```
+
+Other options:
+
+```bash
+node bin/install.js --only codex,claude,cursor --dry-run
+node bin/install.js --uninstall --only cursor
+```
+
+The installer is safe to rerun for updates and only manages the `md-project-kickoff` skill directories.
+
+### Initialize a project
 
 Minimal initialization:
 
@@ -175,7 +158,13 @@ Minimal initialization:
 python <skill_dir>/scripts/init_project_kickoff.py --target <project_root>
 ```
 
-Create a non-Git local literature library for PDFs and a small knowledge-base starter:
+Generate project-level Claude Code and Cursor entry points:
+
+```bash
+python <skill_dir>/scripts/init_project_kickoff.py --target <project_root> --agent all
+```
+
+Create a non-Git local PDF literature library:
 
 ```bash
 python <skill_dir>/scripts/init_project_kickoff.py --target <project_root> --with-literature-library
@@ -187,10 +176,21 @@ Add literature and remote-run scaffolding:
 python <skill_dir>/scripts/init_project_kickoff.py --target <project_root> --profile full
 ```
 
-Generate project-level Claude Code and Cursor entry points:
+### Alternative installation
+
+Run the initializer directly from GitHub:
 
 ```bash
-python <skill_dir>/scripts/init_project_kickoff.py --target <project_root> --agent all
+npx -y github:Ychris12138/md-project-kickoff --target <project_root>
 ```
 
-The default `.gitignore` is domain-neutral. Optional domain profiles live under `assets/md-project-kickoff-template/gitignore-profiles/`.
+For development or offline use, clone the repository into the relevant Agent skill directory. The default `.gitignore` is domain-neutral; optional domain profiles live under `assets/md-project-kickoff-template/gitignore-profiles/`.
+
+### Core workflow boundaries
+
+- The local checkout is the only development, testing, editing, commit, and push path.
+- The SSH server receives reviewed code, runs jobs, and stores large results.
+- Run a smoke test before large Slurm submissions and verify useful `.out` and `.err` logs.
+- `.out` records the task, system/run, parameters, output directory, start/end times, and exit status.
+- `.err` carries unbuffered, promptly flushed `tqdm`-style frame progress.
+- Trial outputs go under `outputs/test/`; reviewed deliverables go under `outputs/final/`.

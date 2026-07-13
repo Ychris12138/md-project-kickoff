@@ -28,6 +28,20 @@ shared workflow.
 
 ## Quick Start
 
+For a one-command installation, use the bundled cross-platform installer:
+
+```powershell
+irm https://raw.githubusercontent.com/Ychris12138/md-project-kickoff/main/install.ps1 | iex
+```
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Ychris12138/md-project-kickoff/main/install.sh | bash
+```
+
+The installer requires Node.js 18+, detects Codex/Claude Code/Cursor and the
+generic Agent Skills directory, and can be forced to all targets with `--all`.
+It is safe to rerun for updates.
+
 For a new project, run the bundled initializer in lightweight mode. It initializes a local Git repository by default:
 
 ```bash
@@ -126,6 +140,7 @@ Remote boundary:
 
 - `assets/md-project-kickoff-template/`: source templates and prompts.
 - `scripts/init_project_kickoff.py`: copies scaffold files into a project.
+- `bin/install.js`, `install.sh`, `install.ps1`: cross-platform skill installer.
 
 Important template files inside the asset:
 

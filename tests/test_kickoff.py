@@ -1,4 +1,5 @@
 import json
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -10,11 +11,24 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "scripts" / "init_project_kickoff.py"
+INSTALLER = ROOT / "bin" / "install.js"
+NODE_CLI = ROOT / "bin" / "md-project-kickoff.js"
 
 
 def run_initializer(target: Path, *args: str) -> None:
     subprocess.run(
         [sys.executable, str(SCRIPT), "--target", str(target), *args],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+
+def run_installer(home: Path, *args: str) -> None:
+    if shutil.which("node") is None:
+        raise unittest.SkipTest("Node.js is required for installer tests")
+    subprocess.run(
+        ["node", str(INSTALLER), "--home", str(home), *args],
         check=True,
         capture_output=True,
         text=True,
@@ -31,9 +45,11 @@ class SkillMetadataTests(unittest.TestCase):
 
     def test_root_readme_has_portable_public_installation(self) -> None:
         text = (ROOT / "README.md").read_text(encoding="utf-8-sig")
-        self.assertIn("gh repo clone <github-owner>/md-project-kickoff", text)
-        self.assertIn("npx github:<github-owner>/md-project-kickoff --target <project_root>", text)
-        self.assertIn("pull --ff-only", text)
+        self.assertIn("v1.0.2", text)
+        self.assertIn("irm https://raw.githubusercontent.com/Ychris12138/md-project-kickoff/main/install.ps1 | iex", text)
+        self.assertIn("curl -fsSL https://raw.githubusercontent.com/Ychris12138/md-project-kickoff/main/install.sh | bash", text)
+        self.assertIn("npx -y github:Ychris12138/md-project-kickoff --target <project_root>", text)
+        self.assertIn("Node.js 18+", text)
         self.assertNotIn("private repository", text.lower())
 
     def test_root_readme_is_bilingual_and_starts_with_use_cases(self) -> None:
@@ -47,7 +63,8 @@ class SkillMetadataTests(unittest.TestCase):
 
     def test_repository_text_has_no_personal_account_or_specific_research_topic(self) -> None:
         forbidden = [
-            "Ychris" + "12138",
+            "10.13." + "34.120",
+            "/public/home/" + "yangrui/",
             "水模型的" + "结晶",
             "L" + "LPT",
         ]
@@ -187,8 +204,45 @@ class InitializerTests(unittest.TestCase):
         package = json.loads((ROOT / "package.json").read_text(encoding="utf-8-sig"))
 
         self.assertEqual(package["name"], "md-project-kickoff")
+        self.assertEqual(package["version"], "1.0.2")
         self.assertEqual(package["bin"]["md-project-kickoff"], "bin/md-project-kickoff.js")
         self.assertTrue((ROOT / "bin/md-project-kickoff.js").is_file())
+        self.assertTrue((ROOT / "bin/install.js").is_file())
+        self.assertIn("install.sh", package["files"])
+        self.assertIn("install.ps1", package["files"])
+        self.assertIn("split('.').shift()", (ROOT / "install.sh").read_text(encoding="utf-8-sig"))
+        self.assertIn("split('.').shift()", (ROOT / "install.ps1").read_text(encoding="utf-8-sig"))
+
+    def test_installer_installs_all_supported_skill_targets(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            home = Path(temp) / "home"
+            run_installer(home, "--only", "codex,claude,cursor,agents")
+
+            for agent in (".codex", ".claude", ".cursor", ".agents"):
+                skill = home / agent / "skills/md-project-kickoff/SKILL.md"
+                self.assertTrue(skill.is_file(), str(skill))
+
+    def test_installer_detects_existing_agent_root(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            home = Path(temp) / "home"
+            (home / ".cursor").mkdir(parents=True)
+            run_installer(home)
+
+            self.assertTrue((home / ".cursor/skills/md-project-kickoff/SKILL.md").is_file())
+            self.assertFalse((home / ".codex/skills/md-project-kickoff/SKILL.md").exists())
+
+    def test_main_cli_routes_install_mode(self) -> None:
+        if shutil.which("node") is None:
+            self.skipTest("Node.js is required for installer tests")
+        with tempfile.TemporaryDirectory() as temp:
+            home = Path(temp) / "home"
+            subprocess.run(
+                ["node", str(NODE_CLI), "--install", "--home", str(home), "--only", "agents"],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            self.assertTrue((home / ".agents/skills/md-project-kickoff/SKILL.md").is_file())
 
     def test_force_backs_up_existing_project_memory(self) -> None:
         with tempfile.TemporaryDirectory() as temp:

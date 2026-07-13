@@ -10,7 +10,9 @@
     "agents/",
     "assets/",
     "scripts/",
-    "bin/"
+    "bin/",
+    "install.sh",
+    "install.ps1"
   ],
   "license": "MIT"
 }

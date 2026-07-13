@@ -7,6 +7,12 @@ const root = path.resolve(__dirname, "..");
 const script = path.join(root, "scripts", "init_project_kickoff.py");
 const args = process.argv.slice(2);
 
+if (args[0] === "--install") {
+  const installer = path.join(root, "bin", "install.js");
+  const result = spawnSync(process.execPath, [installer, ...args.slice(1)], { stdio: "inherit" });
+  process.exit(result.status ?? 1);
+}
+
 const pythonCandidates = process.platform === "win32" ? ["py", "python", "python3"] : ["python3", "python"];
 
 let lastError = null;
